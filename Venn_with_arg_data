@@ -1,0 +1,63 @@
+##Python class
+##Venn Diagram
+## Data vizualization using python
+
+### installed packages ### 
+### pandas
+### matplotlib
+## scipy
+## seaborn
+
+
+### modules ### 
+
+import numpy as np
+import pandas as pd
+from matplotlib_venn import venn2, venn2_circles
+import matplotlib.pyplot as plt
+from pylab import savefig
+plt.switch_backend('Agg')
+import argparse
+
+
+print ("modules...")
+
+### arguments ###
+ap=argparse.ArgumentParser()
+ap.add_argument("-i", "--input", required=True, help="name of csv file")
+ap.add_argument("-o", "--output", required=True, help="name of output file")
+ap.add_argument("-t", "--title", required=True, help="title of diagram")
+
+
+args=vars(ap.parse_args())
+
+### import data ### 
+
+data = pd.read_csv(args["input"])
+data['Species_ID'] = data['Species_ID'].astype('category')
+data['Season'] = data['Season'].astype('category')
+print(data [:7])
+
+
+### Venn diagram ###
+
+list1=data.loc[data["Season"]==1]
+list2=data.loc[data["Season"]==2]
+print(list1)
+print(list2)
+
+
+
+v=venn2([set(list1["Species_ID"]), set(list2["Species_ID"])], set_labels = ('Summer', 'Winter'))
+v.get_patch_by_id('10').set_alpha(0.6)
+v.get_patch_by_id('10').set_color('blue')
+v.get_patch_by_id('01').set_alpha(0.6)
+v.get_patch_by_id('01').set_color('red')
+v.get_patch_by_id('11').set_alpha(0.4)
+v.get_patch_by_id('11').set_color('purple')
+
+
+plt.title(args["title"])
+
+plt.savefig(args["output"])
+
