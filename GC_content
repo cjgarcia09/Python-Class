@@ -25,21 +25,21 @@ for record in SeqIO.parse ('efuscus.fsa. 'fasta')
 print(data [:7])
 
 #list of GC content 
-GCCONENT = 0                #maybe proplem? try again with []
+GCCONENT = []                #maybe proplem? try again with [] initializing a list, 0 as variables
 SCAFFOLDS = 0
 WINDOWS = 0 
 
 #for every record in your genome
-for RECORD in SeqIO.parse('efuscus.fsa, 'fasta'):
+for RECORD in SeqIO.parse('efuscus.fsa', 'fasta'):
 
 #ERROR
 
 #extract the sequence
-SEQUENCE = SEQRECORD.seq
+  SEQUENCE = SEQRECORD.seq
 
 #check to see if it's over 30000 bp
-if len(SEQUENCE) > 30000:
-SCAFFOLDSCOUNT = SCAFFOLDSCOUNT + 1
+  if len(SEQUENCE) > 30000:
+    SCAFFOLDSCOUNT = SCAFFOLDSCOUNT + 1
 
 
 #plt.title(args["title"])
