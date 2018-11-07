@@ -25,12 +25,14 @@ for record in SeqIO.parse ('efuscus.fsa. 'fasta')
 print(data [:7])
 
 #list of GC content 
-GCCONENT = 0
+GCCONENT = 0                #maybe proplem? try again with []
 SCAFFOLDS = 0
 WINDOWS = 0 
 
 #for every record in your genome
 for RECORD in SeqIO.parse('efuscus.fsa, 'fasta'):
+
+#ERROR
 
 #extract the sequence
 SEQUENCE = SEQRECORD.seq
