@@ -37,7 +37,7 @@ SEQUENCE = SEQRECORD.seq
 
 #check to see if it's over 30000 bp
 if len(SEQUENCE) > 30000:
-SCAFFCOUNT = SCAFFCOUNT + 1
+SCAFFOLDSCOUNT = SCAFFOLDSCOUNT + 1
 
 
 #plt.title(args["title"])
