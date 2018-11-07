@@ -5,4 +5,17 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import argparse
+from Bio import SeqIO
+from Bio.SeqUtils import GC
 
+### arguments ###
+ap=argparse.ArgumentParser()
+ap.add_argument("-i", "--input", required=True, help="name of csv file")
+ap.add_argument("-o", "--output", required=True, help="name of output file")
+ap.add_argument("-t", "--title", required=True, help="title of diagram")
+
+
+args=vars(ap.parse_args())
+
+##Window
+Funtion that defines a window 
