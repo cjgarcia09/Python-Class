@@ -1,12 +1,14 @@
 
 
-#modules
+### modules ###
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import argparse
 from Bio import SeqIO
 from Bio.SeqUtils import GC
+
+print ("modules...")
 
 ### arguments ###
 ap=argparse.ArgumentParser()
@@ -17,5 +19,25 @@ ap.add_argument("-t", "--title", required=True, help="title of diagram")
 
 args=vars(ap.parse_args())
 
-##Window
-Funtion that defines a window 
+#Read data
+
+for record in SeqIO.parse ('efuscus.fsa. 'fasta')
+print(data [:7])
+
+#list of GC content 
+GCCONENT = 0
+SCAFFOLDS = 0
+WINDOWS = 0 
+
+#for every record in your genome
+	for RECORD in SeqIO.parse('efuscus.fsa, 'fasta'):
+#extract the sequence
+		SEQUENCE = SEQRECORD.seq
+#check to see if it's over 30000 bp
+		if len(SEQUENCE) > 30000:
+			SCAFFCOUNT = SCAFFCOUNT + 1
+
+
+plt.title(args["title"])
+
+plt.savefig(args["output"])
