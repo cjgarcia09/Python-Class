@@ -12,7 +12,7 @@ print ("modules...")
 
 ### arguments ###
 ap=argparse.ArgumentParser()
-ap.add_argument("-i", "--input", required=True, help="name of csv file")
+ap.add_argument("-i", "--input", required=True, help="name of FASTA file")
 ap.add_argument("-o", "--output", required=True, help="name of output file")
 ap.add_argument("-t", "--title", required=True, help="title of diagram")
 
