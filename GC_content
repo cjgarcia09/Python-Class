@@ -14,12 +14,13 @@ print ("modules...")
 
 ### arguments ###
 ap=argparse.ArgumentParser()
-ap.add_argument("-i", "--input", required=True, help="name of FASTA file") #FASTA file name 
+ap.add_argument('-i', '--input', required=True, help="name of FASTA file") #FASTA file name 
 ap.add_argument('-d', '--directory', type=str, help='Location of directory of the input file', required=True)
 ap.add_argument('-od', '--outdir', type=str, help='Location of directory for the output file(s), defaults to current directory')
 ap.add_argument('-wo', '--winout', type=str, help='Make window FASTA file, y or n', default = 'n')
 ap.add_argument('-p', '--prefix', type=str, help='Option to specify output name, defaults to basename of input file')
-ap.add_argument('-w', '--window', type=int, help='Size of window, defaults to 10kb', default=10000)
+ap.add_argument('-w', '--window', type=int, help='Size of window, defaults to 10kb', default=10000)#size of window
+ap.add_argument('-minl', '--minlen', type=int, help='Minimum length of scaffolds to use, defaults to 30kb', default=30000)#minimum size
 ap.add_argument('-s', '--step', type=int, help='Size of step, defaults to 10kb', default=10000)
 
 
