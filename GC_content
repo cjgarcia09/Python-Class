@@ -23,9 +23,6 @@ ap.add_argument('-w', '--window', type=int, help='Size of window, defaults to 10
 ap.add_argument('-s', '--step', type=int, help='Size of step, defaults to 10kb', default=10000)
 
 
-args=vars(ap.parse_args())
-
-
 args = ap.parse_args()
 	FILE = args.input
 	DIR = args.directory
