@@ -54,7 +54,7 @@ def gc_from_windows():
 	print('Minimum scaffold size = ' + str(MIN_LEN) + '.')
 	print('Window size = ' + str(WINDOW) + '.')
 	
-	GC_LIST = []
+	GC_CONTENT = []
 	SC_COUNT = 0
 	WIN_COUNT = 0
 	
@@ -70,9 +70,9 @@ def gc_from_windows():
 							#SeqIO.write(SLICE, WIN_FILE, "fasta")
 					WIN_COUNT += 1
 					WIN_GC = GC(SLICE)
-					GC_LIST.append(WIN_GC)
+					GC_CONTENT.append(WIN_GC)
 	
-	plt.hist(GC_LIST)
+	plt.hist(GC_CONTENT)
 	plt.savefig(PREFIX + "_GC_content_histogram.png")
   
   if __name__ =='__main__':gc_from_windows()
