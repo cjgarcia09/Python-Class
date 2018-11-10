@@ -4,44 +4,78 @@
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+plt.switch_backend('Agg')
 import argparse
 from Bio import SeqIO
 from Bio.SeqUtils import GC
+from pylab import savefig
 
 print ("modules...")
 
 ### arguments ###
 ap=argparse.ArgumentParser()
-ap.add_argument("-i", "--input", required=True, help="name of FASTA file")
-ap.add_argument("-o", "--output", required=True, help="name of output file")
-ap.add_argument("-t", "--title", required=True, help="title of diagram")
+ap.add_argument("-i", "--input", required=True, help="name of FASTA file") #FASTA file name 
+ap.add_argument('-d', '--directory', type=str, help='Location of directory of the input file', required=True)
+ap.add_argument('-od', '--outdir', type=str, help='Location of directory for the output file(s), defaults to current directory')
+ap.add_argument('-wo', '--winout', type=str, help='Make window FASTA file, y or n', default = 'n')
+ap.add_argument('-p', '--prefix', type=str, help='Option to specify output name, defaults to basename of input file')
+ap.add_argument('-w', '--window', type=int, help='Size of window, defaults to 10kb', default=10000)
+ap.add_argument('-s', '--step', type=int, help='Size of step, defaults to 10kb', default=10000)
 
 
 args=vars(ap.parse_args())
 
-#Read data
 
-for record in SeqIO.parse ('efuscus.fsa. 'fasta')
-print(data [:7])
+args = ap.parse_args()
+	FILE = args.input
+	DIR = args.directory
+	if args.prefix:
+		PREFIX = args.prefix
+	else:
+		BASENAME = os.path.basename(FILE).split(".")[0]
+		PREFIX = BASENAME
+	MIN_LEN = args.minlen
+	WINDOW = args.window
+	STEP = args.step
+	if args.outdir:
+		OUT_DIR = args.outdir
+	else:
+		OUT_DIR = '.'
+	WIN_OUT = args.winout
+	
+	return FILE, DIR, PREFIX, MIN_LEN, WINDOW, STEP, OUT_DIR, WIN_OUT
+	
+def make_windows(SEQUENCE, WIN_SIZE, STEP_SIZE):
+	SEQ_LEN = len(SEQUENCE)
+	WIN_NUM = int(SEQ_LEN/STEP_SIZE)
+	for WIN in range(0, WIN_NUM * STEP_SIZE, STEP_SIZE):
+		yield SEQUENCE[WIN:WIN+WIN_SIZE]
 
-#list of GC content 
-GCCONENT = []                #maybe proplem? try again with [] initializing a list, 0 as variables
-SCAFFOLDS = 0
-WINDOWS = 0 
-
-#for every record in your genome
-for RECORD in SeqIO.parse('efuscus.fsa', 'fasta'):
-
-#ERROR
-
-#extract the sequence
-  SEQUENCE = SEQRECORD.seq
-
-#check to see if it's over 30000 bp
-  if len(SEQUENCE) > 30000:
-    SCAFFOLDSCOUNT = SCAFFOLDSCOUNT + 1
-
-
-#plt.title(args["title"])
-
-#plt.savefig(args["output"])
+def gc_from_windows():
+	FILE, DIR, PREFIX, MIN_LEN, WINDOW, STEP, OUT_DIR, WIN_OUT = get_args()
+	print('Genome file is ' + FILE + '.')
+	print('Minimum scaffold size = ' + str(MIN_LEN) + '.')
+	print('Window size = ' + str(WINDOW) + '.')
+	
+	GC_LIST = []
+	SC_COUNT = 0
+	WIN_COUNT = 0
+	
+	with open(FILE, "r") as GENOME:
+		for SCAFFOLD in SeqIO.parse(GENOME, 'fasta'):
+			SEQ = SCAFFOLD.seq
+			if len(SEQ) >= MIN_LEN:
+				SC_COUNT += 1
+				for SLICE in make_windows(SEQ, WINDOW, STEP):
+					#if WIN_OUT == 'y':
+						#OUTPUT2 = PREFIX + "_windows.fa"
+						#with open(OUTPUT2,"w+") as WIN_FILE:
+							#SeqIO.write(SLICE, WIN_FILE, "fasta")
+					WIN_COUNT += 1
+					WIN_GC = GC(SLICE)
+					GC_LIST.append(WIN_GC)
+	
+	plt.hist(GC_LIST)
+	plt.savefig(PREFIX + "_GC_content_histogram.png")
+  
+  if __name__ =='__main__':gc_from_windows()
