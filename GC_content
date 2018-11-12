@@ -3,77 +3,52 @@
 ### modules ###
 import numpy as np
 import matplotlib
+import pandas as pd
 import matplotlib.pyplot as plt
-plt.switch_backend('Agg')
 import argparse
 from Bio import SeqIO
-from Bio.SeqUtils import GC
-from pylab import savefig
 
-print ("modules...")
+
+print ("modules...") # just to make sure modules are entered 
 
 ### arguments ###
+
 ap=argparse.ArgumentParser()
 ap.add_argument('-i', '--input', required=True, help="name of FASTA file") #FASTA file name 
-ap.add_argument('-d', '--directory', type=str, help='Location of directory of the input file', required=True)
-ap.add_argument('-od', '--outdir', type=str, help='Location of directory for the output file(s), defaults to current directory')
-ap.add_argument('-wo', '--winout', type=str, help='Make window FASTA file, y or n', default = 'n')
-ap.add_argument('-p', '--prefix', type=str, help='Option to specify output name, defaults to basename of input file')
-ap.add_argument('-w', '--window', type=int, help='Size of window, defaults to 10kb', default=10000)#size of window
-ap.add_argument('-minl', '--minlen', type=int, help='Minimum length of scaffolds to use, defaults to 30kb', default=30000)#minimum size
-ap.add_argument('-s', '--step', type=int, help='Size of step, defaults to 10kb', default=10000)
+ap.add_argument("-o", "--output", required=True, help="name of output file")
+ap.add_argument('-w', '--window', required=False, nargs="?", default=10000, help="Size of windeow, default=10,000base pairs", type= int)#size of window
+
+args = vars(ap.parse_args())
+
+### Analysing windows ###
+
+def sliding_window_analysis(sequence, function, window_size = args["window"]):
+	for start in range (0, len(sequence), window_size):						
+		end = start + window_size											
+		if end > len(sequence):												
+			break															
+		yield start, end, function (sequence[start: end])				
+
+### Getting GC content (multiply and divide) ###
+
+def gc_content(sequence):
+	num_gc = sequence.count("C") + sequence.count("G")
+	div_gc = num_gc/len(sequence)
+	return 100 * div_gc
+	print ("GC Content:", gc_content(sequence))
+	
+### Script ###
+
+window_gc = []
+windows = 0
+for seq_record in SeqIO.parse("efuscus.fsa", "fasta"):
+	sequence = seq_record.seq
+	#print(seq_record.id, gc_content(sequence))
+	for start, end, gc in sliding_window_analysis(sequence, gc_content):
+		windows += 1
+		print(start, end, gc)
+		window_gc.append(gc)
+print(window_gc[:5])
+print("window count:", windows)	
 
 
-args = ap.parse_args()
-	FILE = args.input
-	DIR = args.directory
-	if args.prefix:
-		PREFIX = args.prefix
-	else:
-		BASENAME = os.path.basename(FILE).split(".")[0]
-		PREFIX = BASENAME
-	MIN_LEN = args.minlen
-	WINDOW = args.window
-	STEP = args.step
-	if args.outdir:
-		OUT_DIR = args.outdir
-	else:
-		OUT_DIR = '.'
-	WIN_OUT = args.winout
-	
-	return FILE, DIR, PREFIX, MIN_LEN, WINDOW, STEP, OUT_DIR, WIN_OUT
-	
-def make_windows(SEQUENCE, WIN_SIZE, STEP_SIZE):
-	SEQ_LEN = len(SEQUENCE)
-	WIN_NUM = int(SEQ_LEN/STEP_SIZE)
-	for WIN in range(0, WIN_NUM * STEP_SIZE, STEP_SIZE):
-		yield SEQUENCE[WIN:WIN+WIN_SIZE]
-
-def gc_from_windows():
-	FILE, DIR, PREFIX, MIN_LEN, WINDOW, STEP, OUT_DIR, WIN_OUT = get_args()
-	print('Genome file is ' + FILE + '.')
-	print('Minimum scaffold size = ' + str(MIN_LEN) + '.')
-	print('Window size = ' + str(WINDOW) + '.')
-	
-	GC_CONTENT = []
-	SC_COUNT = 0
-	WIN_COUNT = 0
-	
-	with open(FILE, "r") as GENOME:
-		for SCAFFOLD in SeqIO.parse(GENOME, 'fasta'):
-			SEQ = SCAFFOLD.seq
-			if len(SEQ) >= MIN_LEN:
-				SC_COUNT += 1
-				for SLICE in make_windows(SEQ, WINDOW, STEP):
-					#if WIN_OUT == 'y':
-						#OUTPUT2 = PREFIX + "_windows.fa"
-						#with open(OUTPUT2,"w+") as WIN_FILE:
-							#SeqIO.write(SLICE, WIN_FILE, "fasta")
-					WIN_COUNT += 1
-					WIN_GC = GC(SLICE)
-					GC_CONTENT.append(WIN_GC)
-	
-	plt.hist(GC_CONTENT)
-	plt.savefig(PREFIX + "_GC_content_histogram.png")
-  
-  if __name__ =='__main__':gc_from_windows()
