@@ -9,7 +9,7 @@ import argparse
 from Bio import SeqIO
 
 
-print ("modules...") # just to make sure 
+print ("Importing modules...") # just to make sure 
 
 ### arguments ###
 
