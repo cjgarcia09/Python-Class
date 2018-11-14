@@ -9,25 +9,26 @@ import argparse
 from Bio import SeqIO
 
 
-print ("modules...") # just to make sure modules are entered 
+print ("modules...") # just to make sure 
 
 ### arguments ###
 
+
 ap=argparse.ArgumentParser()
-ap.add_argument('-i', '--input', required=True, help="name of FASTA file") #FASTA file name 
-ap.add_argument("-o", "--output", required=True, help="name of output file")
-ap.add_argument('-w', '--window', required=False, nargs="?", default=10000, help="Size of windeow, default=10,000base pairs", type= int)#size of window
+# ap.add_argument("-i", "--input", required=True, help="name of FASTA file") #FASTA file name 
+# ap.add_argument("-o", "--output", required=True, help="name of output file")
+# ap.add_argument("-w", "--window", required=False, args="?", default=10000, help="Size of windeow, default=10,000base pairs", type= int)#size of window
 
 args = vars(ap.parse_args())
 
 ### Analysing windows ###
 
-def sliding_window_analysis(sequence, function, window_size = args["window"]):
+def sliding_window_analysis(sequence, function, window_size = 10000):
 	for start in range (0, len(sequence), window_size):						
-		end = start + window_size											
+		end = begin + window_size											
 		if end > len(sequence):												
 			break															
-		yield start, end, function (sequence[start: end])				
+		yield begin, end, function (sequence[begin: end])				
 
 ### Getting GC content (multiply and divide) ###
 
@@ -39,7 +40,7 @@ def gc_content(sequence):
 	
 ### Script ###
 
-window_gc = []
+gc_window = []
 windows = 0
 for seq_record in SeqIO.parse("efuscus.fsa", "fasta"):
 	sequence = seq_record.seq
@@ -47,8 +48,13 @@ for seq_record in SeqIO.parse("efuscus.fsa", "fasta"):
 	for start, end, gc in sliding_window_analysis(sequence, gc_content):
 		windows += 1
 		print(start, end, gc)
-		window_gc.append(gc)
-print(window_gc[:5])
+		gc_window.append(gc)
+print(gc_window[:5])
 print("window count:", windows)	
 
 
+plt.hist(x=gc_window), bins = "auto")
+plt.xlabel("GC")
+plt.ylabel("Percent")
+plt.savefig("GC_content_fig")
+plt.show()
