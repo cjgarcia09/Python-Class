@@ -16,7 +16,7 @@ print ("modules...") # just to make sure
 
 ap=argparse.ArgumentParser()
 # ap.add_argument("-i", "--input", required=True, help="name of FASTA file") #FASTA file name 
-# ap.add_argument("-o", "--output", required=True, help="name of output file")
+# ap.add_argument("-o", "--output", required=True, help="name of output file")#file that you are producing/saving
 # ap.add_argument("-w", "--window", required=False, args="?", default=10000, help="Size of windeow, default=10,000base pairs", type= int)#size of window
 
 args = vars(ap.parse_args())
@@ -24,7 +24,7 @@ args = vars(ap.parse_args())
 ### Analysing windows ###
 
 def sliding_window_analysis(sequence, function, window_size = 10000):
-	for start in range (0, len(sequence), window_size):						
+	for begin in range (0, len(sequence), window_size):						
 		end = begin + window_size											
 		if end > len(sequence):												
 			break															
@@ -45,9 +45,9 @@ windows = 0
 for seq_record in SeqIO.parse("efuscus.fsa", "fasta"):
 	sequence = seq_record.seq
 	#print(seq_record.id, gc_content(sequence))
-	for start, end, gc in sliding_window_analysis(sequence, gc_content):
+	for begin, end, gc in sliding_window_analysis(sequence, gc_content):
 		windows += 1
-		print(start, end, gc)
+		print(begin, end, gc)
 		gc_window.append(gc)
 print(gc_window[:5])
 print("window count:", windows)	
