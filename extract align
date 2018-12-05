@@ -1,0 +1,35 @@
+###250 Mammalian Genome assignment###
+
+#modules#
+from Bio import SeqIO
+import argparse
+import os
+from Bio.Blast.Applications import NcbiblastnCommandline
+
+###References
+###http://www.academis.eu/posts/blast_tutorial
+
+#Arguments#
+#ap=argparse.ArgumentParser()
+#args = parser.parse_args()
+
+#makeblastdb
+#blastp
+
+#makeblastdp -in starting_library.fas -dbtryp prot
+
+#db = "starting_library.fas"
+#cmd = "makeblastdp -query query.seq -db starting_library.fas -out output.txt -outfmt 6"
+
+#Working in directory
+os.system(cmd)
+
+#modules
+subprocess.check_call('makeblastdb -in {} -dbtype nucl'.format (starting_library.fas), shell=True)
+
+#Blast
+subprocess.check_call('balstn -query {} -db {} -out output_results.txt -outfmt 6'.format(cPer_rn.fa.gz, starting_library.fas), shell=True)
+
+#extract align
+subprocess.check_call('perl {}/extractAlignTEs.pl -genome {} -blast extractalign_outp -consTEs {} -seqBuffer {} -seqNum {} -align'.format(/home/garcia52/ex_align_assignment/extractAlign_assignment, starting_libary.fas, cPer_rn.fa.gz, 1000, 20), shell=True)
+
