@@ -1,0 +1,190 @@
+##Exercise 2.1
+#Write a Python program that prints out a table with Fahrenheit degrees 0,10,20,30....,100 in the ﬁrst column and the corresponding Celsius degrees in the second column.
+
+F = 0
+dC = 10
+while F <= 100:
+	C = (F-32)*(5/9)
+	print (F,'t',C)
+	F = F + dC
+
+###################################	
+
+##Exercise 2.2
+#Many people use an approximate formula for quickly converting Fahrenheit (F) to Celcius (C) degrees: 
+#see page 82 excercise 2.2 for equations
+#Modify program form Excercise 2.1 so that it prints three olunms: F, C, ad the approximate value C.
+
+F=0
+dC = 10
+while  F <= 100:
+	C = (F-32)*(5/9)
+	OC = (F-30)/2
+	print(F,'\t',C,'\t',OC)
+	F = F + dC
+
+####################################
+
+##Excercise 2.3
+#Set a variable primes to list containing the numbers 2, 3, 5, 7, 11, and 13. Write outeach list element in a for loop. Assighn 17 toa variable p and add p to the end of the list. Print out the entire new list.
+
+primes = [2,3,5,7,11,13]
+for n in primes: 
+	print(n)
+	
+p = 17
+primes.append(p)
+print(primes)
+
+#####################################
+
+##Excercise 2.4 
+#Write a program that generates all odd numbers from 1 to n. Set n in the beginning of the program and use a while loop to compute the numbers. (make sure that if n is an even number, the largest generated odd number is n-1.)
+#name file: odd
+
+n = 21
+x = 1
+while x <= n: 
+	print(x)
+	x = x + 2
+
+#####################################
+
+##Exercise 2.5
+#Write a program that computes the sum of the intergers from 1 up to and including n. Compare the result with the famous formule n(n + 1)/2.
+
+n = 10
+s = 0 
+sum = 0
+while s <= n: 
+	added = sum + s 
+	sum = added
+	s = s + 1
+	print("not at n yet")
+print(sum)
+formula = n*(n+1)/2
+print(formula)
+sum == formula 
+
+#####################################
+
+##Excercise 2.6
+#The n-th energy level for an electron in a Hydrogen atoms is given by (see page 82 this exercise for explination)
+#a) write a python program that calculates and prints the energy level
+
+m = 9.1094E-31
+e = 1.6022E-19
+sigma = 8.8542E-12
+h = 6.6261E-31
+deltaE = -1 * (((m*e**4) / (8*sigma**2*h**2)) * (1 / n**2))
+
+betaE = -1 * (((m*e**4) / (8*sigma**2*h**2)) * (0.0025))
+n = 1
+while n <=20:
+	print(deltaE)
+	print(n)
+	deltaE == betaE
+	n = n + 1
+
+#b the released energy whrn an electron moves from level nsubi to level nsubf is give by (see page 83 excercise2.6 part b for equation)
+#add statements to the program from a) so that it prints a second, nicely formatted tabe lwhere the cell in column i and row f contains the energy released when an electron moves from energy level i to level f, for i, f = 1,.....5.
+
+m = 9.1094E-31
+e = 1.6022E-19
+sigma = 8.8542E-12
+h = 6.6261E-31
+deltaE = -1 * (m*e**4 / 8*sigma**2*h**2) * ((1 / n**2) - (1/f**2))
+sigmaE = -1 * (m*e**4 / 8*sigma**2*h**2) * ((1/)
+
+#####################################
+
+##Excercise 2.7
+#see excercise for questions 
+
+#???????????????????????
+
+#####################################
+
+##Excercise 2.8
+#See excercise for questions
+
+#a) use foreloop to produce table.
+
+y(t) = v0t -(1/2)*g*(t**2)
+t = 0 
+
+#b) add code with a while loop to porduce the table.
+
+y(t) = v0t -1/2gt**2
+t = 2v0/g 
+while y(t) <
+
+#####################################
+
+##Excercise 2.10
+#Go through each statement and explain what is printed by the program.
+
+a = [1, 3, 5, 7, 11] #creating a list of numbers in a tuple
+b = [13, 17] #short list of numbers 
+c = a + b #combing list in a with list b
+print c #displaying the combined lists
+b[0] = -1 #it's editing list b so that the 0th (aka first) number is now a -1
+d =[ e+1 for e in a] #it's adding +1 to each value in list "a"
+print(d) #displaying d on screen
+d.append(b[0] + 1) #to the end of list "d", it's adding the value of b[0] (which is -1) +1 to make it a 0
+d.append(b[-1] + 1) #now it's adding the last element of list b (17) + 1 (so 18) to list d 
+print(d[-2:]) #displaying from the 2nd last number towards the beginning in list d 
+for e1 in a: 
+	for e2 in b: 
+		print(e1 + e2) #displaying the e1 and e2?
+
+#####################################
+
+## Excercise2.11
+#Compute sum. See excercise for more details 
+
+
+#####################################
+
+##Exercice 2.12
+
+
+#####################################
+
+#3Excercise 2.13
+#See instructions on excercise.
+
+initial_amount = 100 
+p = 5.5 # interest rate 
+amount = initial_amount 
+years =0 
+while amount <= 1.5*initial_amount: 
+	amount = amount + p/100*amount 
+	print(amount)
+	print(years)
+	years = years +1 
+
+#####################################
+
+##Excercise 2.14
+
+math.asine()
+
+
+#####################################
+
+##Exercise 2.115
+#a
+print(q[0][0])
+print(q[1])
+print(q[2][1])
+print(q[1][[0])
+because negatives start from teh back, so -1 means the first from the back (g and h) and -2 means 2nd from back (g)
+#b
+1-for each invidivual number in the list "q":
+2-for each individual value in the range "i" (which is the length of whatever value is used in the list "q")
+3-print the jth value in the range "i"
+
+#####################################
+#####################################
+#####################################
