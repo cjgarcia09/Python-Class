@@ -1,0 +1,72 @@
+##Make random 60000kb sequence##
+
+import random
+alphabet = list('ATGC')
+N = 60000
+dna = [random.choice(alphabet) for i in range (int( (N)))]
+dna = ''.join(dna) 
+
+def count_seq(dna):
+	CG = 0											#counter for CG
+	ACGTC = 0										#counter for ACGTC
+	CGinput = input(dna)							#creating an input
+	CGlist = list(CGinput)							#creating a list
+	ACGTCinput = input(dna)							#creating an input
+	ACGTClist = list(ACGTCinput)					#creating a list
+	for CG in dna:
+		if dna ['CG','C'] == base:
+			G += 1
+			CG.append(True)
+		else
+			CG.append(False)
+	return sum(CG)
+	
+def count _seq(dna):
+	m = []
+	counter = 0
+	for counter in len(dna):
+		if dna [counter] == "C":
+			m.append(True)
+		else:
+			m.append(False)
+		counter += 1
+	
+		return sum(m)
+		
+		
+def count_seq(dna):
+    ...:     CG = []
+    ...:     counter = 0
+    ...:     while counter < len(dna)-1:
+    ...:         if dna [counter] == "C":
+    ...:              next_base=counter+1
+    ...:              if dna [next_base] == "G":
+    ...:                 CG.append(True)
+    ...:         counter += 1
+    ...:     return sum(CG)
+	
+In [47]: def count_seq(dna):
+    ...:     CG = []
+    ...:     ACGTC = []
+    ...:     counter = 0
+    ...:     while counter < len(dna)-4:
+    ...:         if dna [counter] == "C":
+    ...:              next_base=counter+1
+    ...:              if dna [next_base] == "G":
+    ...:                  CG.append(True)
+    ...:                  next_base+=1
+    ...:                  if dna [next_base] == "T":
+    ...:                     next_base+=1
+    ...:                     if dna [next_base] == "C":
+    ...:                        next_base = counter-1
+    ...:                        if dna [next_base] == "A":
+    ...:                            ACGTC.append(True)
+    ...:         counter += 1
+    ...:     return print("number of CG =", sum(CG), "number of ACGTC=", sum(ACGTC)
+    ...: )
+    ...:
+    ...:
+
+In [48]: count_seq(dna)
+number of CG = 3736 number of ACGTC= 84
+	
