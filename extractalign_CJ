@@ -1,0 +1,128 @@
+# . conda/etc/profile.d/conda.sh 
+# conda activate
+# conda install --channel conda-forge --channel bioconda pybedtools
+# pip install pyfaidx
+
+
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio.Alphabet import IUPAC
+import argparse
+import pandas as pd
+from pybedtools import BedTool
+from pyfaidx import Fasta
+from pyfaidx import Faidx
+import shutil
+import re
+import os
+import subprocess
+
+# To Do
+# 1. Set arguments
+# 2. Reverse complement
+ 
+# Setting up arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-g", "--GENOME", type=str, required=True, help="Add your genome file")
+ap.add_argument("-b", "--BLAST", required=True, help="Add your blast file")
+ap.add_argument("-f", "--BUFFER", required=True, type=int,help = "Add your chosen buffer length")
+ap.add_argument("-t", "--TE_LIBRARY", required=True, help="Add your TE library consensus sequences to be extracted")
+ap.add_argument("-n", "--NUMBER", required=True, help="Add your sequence number")
+ap.add_argument('-a', '--ALIGN', type=str, help='Align the output fasta file, y or n?. Default is y.', default = 'y')
+args = vars(ap.parse_args())
+
+
+# Reverse Transcribe
+#sequence = sequence.reverse_complement()
+
+############## FUNCTIONS #################
+
+# Create TE output files
+def createTEoutputs(LIBRARY):
+	for record in SeqIO.parse(LIBRARY, "fasta"):
+		RECORD = record.id
+		RECORD = RECORD.replace("#", "__").replace("/", "___")
+		SEQ = record.seq	# Calling the sequence a variable "SEQUENCE"
+		SEQ.RECORD = SeqRecord(SEQ)
+		SEQ.RECORD.id = "CONSENSUS-"+RECORD
+		SeqIO.write(SEQ.RECORD, "tmpTEfiles/" + RECORD + ".fa", "fasta")
+
+def orient(row):
+	if row["Start"] < row["End"]:
+		return "+"
+	else:
+		return "-"
+
+def switch(row):
+	if row["StrOrient"] == "-": 
+		END = row["Start"]
+		row["Start"] = row["End"]
+		row["End"] = END
+	return row
+
+def extract_start(row):
+	if row["Start"] < args["BUFFER"]:
+		return 0
+	else:
+		return row["Start"] - args["BUFFER"]
+	return row
+	
+def organizeblasthits(BLAST, BUFFER, GENOME):
+	fields = ["Query", "SeqID", "PerMatch", "Length", "Mismatch", "GapOpen", "QStart", "QStop", "Start", "End", "Evalue", "BitScore"]
+	BB = pd.read_csv(args["BLAST"], sep="\t", names=fields)
+	BB["StrOrient"]= BB.apply(orient, axis=1)
+	BB = (BB.apply(switch, axis=1))
+	BB["Extract_Start"] = BB.apply(extract_start, axis = 1)
+	BB["Extract_Stop"] = (BB["End"]+ args["BUFFER"])
+	BLAST = BB[["Query", "SeqID", "Extract_Start", "Extract_Stop", "StrOrient", "Evalue","BitScore"]]
+	QUERYLIST = BLAST["Query"].unique()
+	for query in QUERYLIST:
+		QUERYFILE = BLAST[BLAST['Query'] == query]
+		QUERYFILE = QUERYFILE.sort_values(["Evalue", "BitScore"], ascending=[True, False])
+		QUERYFILE = QUERYFILE.head(int(args["NUMBER"]))
+		QUERYFILE.to_csv("tmpbedfiles/" +query + ".bed",sep='\t', header= False, columns= ["SeqID", "Extract_Start", "Extract_Stop", "StrOrient"], index=False)
+		CURRENTBED= BedTool("tmpbedfiles/" +query + ".bed")
+		GENOMEPREFIX = os.path.splitext(args["GENOME"])[0]
+		ORIENT= QUERYFILE["StrOrient"]
+		FASTA = CURRENTBED.sequence(fi=args["GENOME"], s=True)
+		FASTASAVE = CURRENTBED.save_seqs('tmpextracts/'+ query + '.fa')
+		subprocess.run('cat {} {} >{}'.format('tmpextracts/' + query + '.fa', 'tmpTEfiles/' + query +'.fa', 'catTEfiles/' + query +'.fa'), shell=True)
+
+		
+def DIRS(DIR):
+	if os.path.exists(DIR):
+		shutil.rmtree(DIR)
+	os.mkdir(DIR)
+
+def MUSCLE(TOALIGN):
+	TOALIGNPREFIX = os.path.splitext(TOALIGN)[0]
+	SOFTWARE = '/lustre/work/daray/software/'
+	subprocess.check_call(SOFTWARE + 'muscle/muscle -in {} -out {}'.format('catTEfiles/' + TOALIGN, 'muscle/' + TOALIGNPREFIX + '.fa'), shell=True)
+
+##############################################
+
+
+DIRS('tmpTEfiles')
+DIRS('tmpbedfiles')
+DIRS('tmpextracts')
+DIRS('catTEfiles')
+
+
+GENOMEIDX = Fasta(args["GENOME"])
+GENOMEPREFIX = os.path.splitext(args["GENOME"])[0]
+FAIDX = pd.read_csv(args["GENOME"] + '.fai', sep='\t', names=['one', 'two', 'three', 'four', 'five'])
+FAIDX = FAIDX[['one', 'two']]
+FAIDX.to_csv(GENOMEPREFIX + '.fai', sep='\t', header=False, index=False)
+
+createTEoutputs(args["TE_LIBRARY"])
+organizeblasthits(args["BLAST"], args["BUFFER"], args["GENOME"])
+
+ALIGN=args["ALIGN"]
+if ALIGN == 'y':
+	for FILE in os.listdir('tmpextracts'):
+		MUSCLE(FILE)
+
+os.remove('tmpbedfiles/' +  query + '.bed')
+os.remove('tmpextracts/' + query + '.fa')
+os.remove('tmpTEfiles/' + query + '.fa')
